@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { GraphQLError } from 'graphql';
@@ -10,24 +10,32 @@ export class AuthService {
   constructor(private config: ConfigService) {}
 
   verifyToken(req: Request) {
-    {
-      try {
-        const receivedValue = req.headers['authorization'];
-        if (!receivedValue || receivedValue === undefined)
-          throw new GraphQLError('Invalid token');
-        if (receivedValue.startsWith('Bearer ')) {
-          const token = receivedValue.split(' ')[1];
+    try {
+      const receivedValue = req.headers['authorization'];
 
-          const decoded = jwt.verify(token, this.config.get('JWT_SECRET'));
-          return decoded;
-        }
-      } catch (error) {
-        throw new UnauthorizedException('Invalid token');
+      if (!receivedValue || receivedValue === undefined) {
+        throw new GraphQLError('Invalid token');
       }
+
+      if (receivedValue.startsWith('Bearer ')) {
+        const token = receivedValue.split(' ')[1];
+        const decoded = jwt.verify(token, this.config.get('JWT_SECRET'));
+        return decoded;
+      } else {
+        throw new GraphQLError('Authorization header is malformed');
+      }
+    } catch (error) {
+      throw new GraphQLError(error.message || 'Invalid token');
     }
   }
+
   genToken(user: User): string {
-    const payload = {
+    interface PayloadInterface {
+      sub: number;
+      email: string;
+    }
+
+    const payload: PayloadInterface = {
       sub: user.id,
       email: user.email,
     };
@@ -44,7 +52,7 @@ export class AuthService {
 
       return 'Bearer ' + token;
     } catch (error) {
-      throw new Error('Token generation failed');
+      throw new Error(error.message);
     }
   }
 }
