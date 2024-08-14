@@ -1,5 +1,4 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Post } from 'src/post/entities/post.entity';
 
 @ObjectType()
 export class User {
@@ -26,4 +25,34 @@ export class UserSuccess {
 
   @Field(() => User, { nullable: true })
   user: User;
+}
+
+@ObjectType()
+export class Post {
+  @Field(() => Int, { description: 'ID of the post' })
+  id: number;
+
+  @Field(() => Int, {
+    nullable: true,
+    description: 'ID of the user who created the post',
+  })
+  user_id?: number;
+
+  @Field(() => User, {
+    nullable: true,
+    description: 'User who created the post',
+  })
+  user?: User;
+
+  @Field(() => String, { nullable: true, description: 'Content of the post' })
+  note?: string;
+}
+
+@ObjectType()
+export class PostSuccess {
+  @Field(() => String, { nullable: true })
+  message: string;
+
+  @Field(() => Post, { nullable: true })
+  post: Post;
 }

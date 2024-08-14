@@ -8,7 +8,7 @@ import { DbConnectModule } from './db-connect/db-connect.module';
 import { ErrorFormatter } from './utils/error-formatter';
 import { GraphQLError } from 'graphql';
 import { AuthenticationsModule } from './authentications/authentications.module';
-import { PostModule } from './post/post.module';
+
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { PostModule } from './post/post.module';
     DbConnectModule,
     ConfigModule.forRoot({ isGlobal: true }),
     AuthenticationsModule,
-    PostModule, // Ensure PostModule is imported here
+    
   ],
   controllers: [],
   providers: [],
