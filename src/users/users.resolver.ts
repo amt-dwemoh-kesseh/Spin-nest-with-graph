@@ -48,8 +48,10 @@ export class UsersResolver {
   @Query(() => [Post], { name: 'userPosts' })
   findAllPosts(
     @Args('PostInput') postInput: PostInput,
-    @Context('req') req: Request
+    @Context('req') req: Request,
+    // @Context() ctx:any
   ) {
+    // console.log('something here',ctx)
     return this.postService.findAllUserPosts(req,postInput);
   }
 

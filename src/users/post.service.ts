@@ -23,21 +23,21 @@ export class PostService {
         throw new GraphQLError('User not found');
       }
 
-      const isUser = await this.auth.verifyUserToken(req, checkUser);
-
-      if (isUser) {
-        const userPosts = await this.prisma.posts.findMany({
-          where: {
-            user_id: user_id,
-          },
-          include: {
-            user: true,
-          },
-        });
-        return userPosts;
-      } else {
-        throw new GraphQLError('User verification failed');
-      }
+      // const isUser = await this.auth.verifyUserToken(req, checkUser);
+      const userPosts = await this.prisma.posts.findMany({
+        where: {
+          user_id: user_id,
+        },
+        include: {
+          user: true,
+        },
+      });
+      return userPosts;
+      // if (isUser) {
+        
+      // } else {
+      //   throw new GraphQLError('User verification failed');
+      // }
     } catch (error) {
       // Ensuring that the error is always a GraphQLError
       throw new GraphQLError(error.message || 'An error occurred while fetching posts');
