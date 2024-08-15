@@ -19,7 +19,8 @@ export class AuthService {
 
       if (receivedValue.startsWith('Bearer ')) {
         const token = receivedValue.split(' ')[1];
-        const decoded = jwt.verify(token, this.config.get('JWT_SECRET'));
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         return decoded;
       } else {
         throw new GraphQLError('Authorization header is malformed');

@@ -7,7 +7,7 @@ export class DbConnectService extends PrismaClient {
     super({
       datasources: {
         db: {
-          url: config.get('DATABASE_URL'),
+          url: process.env.DATABASE_URL,
         },
       },
     });
